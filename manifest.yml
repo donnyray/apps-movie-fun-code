@@ -1,0 +1,8 @@
+---
+applications:
+- name: movieFun
+  buildpack: java_buildpack_offline
+  path: target/moviefun.war
+  services:
+  - albums-mysql
+  - movies-mysql

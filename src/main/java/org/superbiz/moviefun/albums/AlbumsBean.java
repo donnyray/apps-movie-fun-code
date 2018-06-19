@@ -16,21 +16,24 @@
  */
 package org.superbiz.moviefun.albums;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
 public class AlbumsBean {
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "albums")
     private EntityManager entityManager;
 
-    @Transactional
     public void addAlbum(Album album) {
         entityManager.persist(album);
     }
@@ -39,5 +42,17 @@ public class AlbumsBean {
         CriteriaQuery<Album> cq = entityManager.getCriteriaBuilder().createQuery(Album.class);
         cq.select(cq.from(Album.class));
         return entityManager.createQuery(cq).getResultList();
+    }
+
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean albumsEntityManager(DataSource dataSource, HibernateJpaVendorAdapter hibernateJpaVendorAdapter){
+        LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
+
+        factoryBean.setDataSource(dataSource);
+        factoryBean.setJpaVendorAdapter(hibernateJpaVendorAdapter);
+        factoryBean.setPackagesToScan("org.superbiz.moviefun.albums");
+        factoryBean.setPersistenceUnitName("movies");
+        return factoryBean;
     }
 }
