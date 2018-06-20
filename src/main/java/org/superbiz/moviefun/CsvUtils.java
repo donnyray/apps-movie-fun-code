@@ -3,18 +3,28 @@ package org.superbiz.moviefun;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class CsvUtils {
 
-    public static String readFile(String path) {
+    private InputStream fileSource(String path) {
         try {
-            Scanner scanner = new Scanner(new File(path)).useDelimiter("\\A");
+            return new FileInputStream(new File(path));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static InputStream streamSource(String path) {
+        return CsvUtils.class.getResourceAsStream("/"+path);
+    }
+
+    public static String readFile(String path) {
+            InputStream source = streamSource(path);
+            Scanner scanner = new Scanner(source).useDelimiter("\\A");
 
             if (scanner.hasNext()) {
                 return scanner.next();
@@ -22,9 +32,7 @@ public class CsvUtils {
                 return "";
             }
 
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+
     }
 
     public static <T> List<T> readFromCsv(ObjectReader objectReader, String path) {
