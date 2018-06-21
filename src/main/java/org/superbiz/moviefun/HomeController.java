@@ -1,7 +1,11 @@
 package org.superbiz.moviefun;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.superbiz.moviefun.albums.Album;
 import org.superbiz.moviefun.albums.AlbumFixtures;
 import org.superbiz.moviefun.albums.AlbumsBean;
@@ -9,6 +13,7 @@ import org.superbiz.moviefun.movies.Movie;
 import org.superbiz.moviefun.movies.MovieFixtures;
 import org.superbiz.moviefun.movies.MoviesBean;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -19,7 +24,10 @@ public class HomeController {
     private final MovieFixtures movieFixtures;
     private final AlbumFixtures albumFixtures;
 
-    public HomeController(MoviesBean moviesBean, AlbumsBean albumsBean, MovieFixtures movieFixtures, AlbumFixtures albumFixtures) {
+    public HomeController(MoviesBean moviesBean,
+                          AlbumsBean albumsBean,
+                          MovieFixtures movieFixtures,
+                          AlbumFixtures albumFixtures) {
         this.moviesBean = moviesBean;
         this.albumsBean = albumsBean;
         this.movieFixtures = movieFixtures;
